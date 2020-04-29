@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Mykolas Portfolio</title>
+  
+<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+  
+<div class="container">
+  <div class="header">
+    <div class="block"><h1>Mykola  Makutrak</h1>
+      <p>Web designer</p>
+    </div>
+    <div class="block1"><a href=""><h3>Про мене </h3></a></div>
+    <div class="block2"><a href=""> <h3>Досягнееня</h3></a></div>
+    <div class="block3"><a href=""><h3>Портфоліо</h3></a></div>
+    <div class="block4"><a href=""><h3>Мої роботи </h3></a></div>
+    <div class="block5"><a href=""><h3>Контаткти</h3></a></div>
+    <div class="block6"><a href=""><img src="img/twitter.png"></a></div>
+    <div class="block7"><a href="https://www.facebook.com/profile.php?id=100010889650315"><img src="img/facebook.png"></a></div>
+    <div class="block8"><a href="https://www.instagram.com/nikola.m005/?hl=uk"><img src="img/instagram.png"></a></div>
+    
+  </div>
+
+  <div class="content">
+  
+    <div class="block9"><h1>Про мене</h1></div>
+    <div class="block10"><h3>P</h3></div>
+  </div>
+  <div class="article">
+    <div class="block12"><img src="img/man.png"></div>
+    <div class="block13"><h2> Про мене<br>
+
+    </h2>
+    <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. <br>
+     Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."<br>
+    But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.  </h4></div>
+    <div class="block14"><h2> Мої роботи <br>
+      <div class="slider">
+    <div class="slider__wrapper">
+      <div class="slider__items">
+        <div class="slider__item">
+          <div style="height: 250px; background: orange;"><img src="img/121212.jpg">
+          </div>
+        </div>
+        <div class="slider__item">
+          <div style="height: 250px; background: green;"><img src="img/12.png"></div>
+        </div>
+        <div class="slider__item">
+          <div style="height: 250px; background: violet;"><img src="img/123.png" style="height: 50px; width: 50px; " ></div>
+        </div>
+        <div class="slider__item">
+          <div style="height: 250px; background: coral;"><img src="img/portfolio.png" ></div>
+        </div>
+      </div>
+    </div>
+    <a class="slider__control slider__control_prev" href="#" role="button"></a>
+    <a class="slider__control slider__control_next" href="#" role="button"></a>
+  </div>
+
+  <script>
+    'use strict';
+    var slideShow = (function () {
+      return function (selector, config) {
+        var
+          _slider = document.querySelector(selector), // основный элемент блока
+          _sliderContainer = _slider.querySelector('.slider__items'), // контейнер для .slider-item
+          _sliderItems = _slider.querySelectorAll('.slider__item'), // коллекция .slider-item
+          _sliderControls = _slider.querySelectorAll('.slider__control'), // элементы управления
+          _currentPosition = 0, // позиция левого активного элемента
+          _transformValue = 0, // значение транфсофрмации .slider_wrapper
+          _transformStep = 100, // величина шага (для трансформации)
+          _itemsArray = [], // массив элементов
+          _timerId,
+          _indicatorItems,
+          _indicatorIndex = 0,
+          _indicatorIndexMax = _sliderItems.length - 1,
+          _stepTouch = 50,
+          _config = {
+            isAutoplay: false, // автоматическая смена слайдов
+            directionAutoplay: 'next', // направление смены слайдов
+            delayAutoplay: 5000, // интервал между автоматической сменой слайдов
+            isPauseOnHover: true // устанавливать ли паузу при поднесении курсора к слайдеру
+          };
+
+        // настройка конфигурации слайдера в зависимости от полученных ключей
+        for (var key in config) {
+          if (key in _config) {
+            _config[key] = config[key];
+          }
+        }
+
+        // наполнение массива _itemsArray
+        for (var i = 0, length = _sliderItems.length; i < length; i++) {
+          _itemsArray.push({ item: _sliderItems[i], position: i, transform: 0 });
+        }
+
+        // переменная position содержит методы с помощью которой можно получить минимальный и максимальный индекс элемента, а также соответствующему этому индексу позицию
+        var position = {
+          getItemIndex: function (mode) {
+            var index = 0;
+            for (var i = 0, length = _itemsArray.length; i < length; i++) {
+              if ((_itemsArray[i].position < _itemsArray[index].position && mode === 'min') || (_itemsArray[i].position > _itemsArray[index].position && mode === 'max')) {
+                index = i;
+              }
+            }
+            return index;
+          },
+          getItemPosition: function (mode) {
+            return _itemsArray[position.getItemIndex(mode)].position;
+          }
+        };
+
+        // функция, выполняющая смену слайда в указанном направлении
+        var _move = function (direction) {
+          var nextItem, currentIndicator = _indicatorIndex;;
+          if (direction === 'next') {
+            _currentPosition++;
+            if (_currentPosition > position.getItemPosition('max')) {
+              nextItem = position.getItemIndex('min');
+              _itemsArray[nextItem].position = position.getItemPosition('max') + 1;
+              _itemsArray[nextItem].transform += _itemsArray.length * 100;
+              _itemsArray[nextItem].item.style.transform = 'translateX(' + _itemsArray[nextItem].transform + '%)';
+            }
+            _transformValue -= _transformStep;
+            _indicatorIndex = _indicatorIndex + 1;
+            if (_indicatorIndex > _indicatorIndexMax) {
+              _indicatorIndex = 0;
+            }
+          } else {
+            _currentPosition--;
+            if (_currentPosition < position.getItemPosition('min')) {
+              nextItem = position.getItemIndex('max');
+              _itemsArray[nextItem].position = position.getItemPosition('min') - 1;
+              _itemsArray[nextItem].transform -= _itemsArray.length * 100;
+              _itemsArray[nextItem].item.style.transform = 'translateX(' + _itemsArray[nextItem].transform + '%)';
+            }
+            _transformValue += _transformStep;
+            _indicatorIndex = _indicatorIndex - 1;
+            if (_indicatorIndex < 0) {
+              _indicatorIndex = _indicatorIndexMax;
+            }
+          }
+          _sliderContainer.style.transform = 'translateX(' + _transformValue + '%)';
+          _indicatorItems[currentIndicator].classList.remove('active');
+          _indicatorItems[_indicatorIndex].classList.add('active');
+        };
+
+        // функция, осуществляющая переход к слайду по его порядковому номеру
+        var _moveTo = function (index) {
+          var i = 0, direction = (index > _indicatorIndex) ? 'next' : 'prev';
+          while (index !== _indicatorIndex && i <= _indicatorIndexMax) {
+            _move(direction);
+            i++;
+          }
+        };
+
+        // функция для запуска автоматической смены слайдов через промежутки времени
+        var _startAutoplay = function () {
+          if (!_config.isAutoplay) {
+            return;
+          }
+          _stopAutoplay();
+          _timerId = setInterval(function () {
+            _move(_config.directionAutoplay);
+          }, _config.delayAutoplay);
+        };
+
+        // функция, отключающая автоматическую смену слайдов
+        var _stopAutoplay = function () {
+          clearInterval(_timerId);
+        };
+
+        // функция, добавляющая индикаторы к слайдеру
+        var _addIndicators = function () {
+          var indicatorsContainer = document.createElement('ol');
+          indicatorsContainer.classList.add('slider__indicators');
+          for (var i = 0, length = _sliderItems.length; i < length; i++) {
+            var sliderIndicatorsItem = document.createElement('li');
+            if (i === 0) {
+              sliderIndicatorsItem.classList.add('active');
+            }
+            sliderIndicatorsItem.setAttribute("data-slide-to", i);
+            indicatorsContainer.appendChild(sliderIndicatorsItem);
+          }
+          _slider.appendChild(indicatorsContainer);
+          _indicatorItems = _slider.querySelectorAll('.slider__indicators > li')
+        };
+
+        var _isTouchDevice = function () {
+          return !!('ontouchstart' in window || navigator.maxTouchPoints);
+        };
+
+        // функция, осуществляющая установку обработчиков для событий 
+        var _setUpListeners = function () {
+          var _startX = 0;
+          if (_isTouchDevice()) {
+            _slider.addEventListener('touchstart', function (e) {
+              _startX = e.changedTouches[0].clientX;
+              _startAutoplay();
+            });
+            _slider.addEventListener('touchend', function (e) {
+              var
+                _endX = e.changedTouches[0].clientX,
+                _deltaX = _endX - _startX;
+              if (_deltaX > _stepTouch) {
+                _move('prev');
+              } else if (_deltaX < -_stepTouch) {
+                _move('next');
+              }
+              _startAutoplay();
+            });
+          } else {
+            for (var i = 0, length = _sliderControls.length; i < length; i++) {
+              _sliderControls[i].classList.add('slider__control_show');
+            }
+          }
+          _slider.addEventListener('click', function (e) {
+            if (e.target.classList.contains('slider__control')) {
+              e.preventDefault();
+              _move(e.target.classList.contains('slider__control_next') ? 'next' : 'prev');
+              _startAutoplay();
+            } else if (e.target.getAttribute('data-slide-to')) {
+              e.preventDefault();
+              _moveTo(parseInt(e.target.getAttribute('data-slide-to')));
+              _startAutoplay();
+            }
+          });
+          document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === "hidden") {
+              _stopAutoplay();
+            } else {
+              _startAutoplay();
+            }
+          }, false);
+          if (_config.isPauseOnHover && _config.isAutoplay) {
+            _slider.addEventListener('mouseenter', function () {
+              _stopAutoplay();
+            });
+            _slider.addEventListener('mouseleave', function () {
+              _startAutoplay();
+            });
+          }
+        };
+
+        // добавляем индикаторы к слайдеру
+        _addIndicators();
+        // установливаем обработчики для событий
+        _setUpListeners();
+        // запускаем автоматическую смену слайдов, если установлен соответствующий ключ
+        _startAutoplay();
+
+        return {
+          // метод слайдера для перехода к следующему слайду
+          next: function () {
+            _move('next');
+          },
+          // метод слайдера для перехода к предыдущему слайду          
+          left: function () {
+            _move('prev');
+          },
+          // метод отключающий автоматическую смену слайдов
+          stop: function () {
+            _config.isAutoplay = false;
+            _stopAutoplay();
+          },
+          // метод запускающий автоматическую смену слайдов
+          cycle: function () {
+            _config.isAutoplay = true;
+            _startAutoplay();
+          }
+        }
+      }
+    }());
+
+    slideShow('.slider', {
+      isAutoplay: true
+    });
+  </script>
+
+    </h2></div>
+   
+
+  </div>
+  <div class="footer">
+    <div class="block15"><h2>Examples Portfolio</h2></div>
+    <div class="block16"><img src="img/meditation.png"></div>
+    <div class="block17"><img src="img/meditation.png"></div>
+    <div class="block18"><img src="img/meditation.png"></div>
+    <div class="block19"><img src="img/meditation.png"></div>
+    <div class="block20"><img src="img/meditation.png"></div>
+  </div> 
+   <div class="foot"><h1>Мої навички</h1>
+    <div class="block21"><h3>Html</h3></div>
+    <div class="block22"><h3>Css</h3></div>
+    <div class="block23"><h3>Javascript</h3></div>
+
+   </div>
+   <div class="foor">
+    <div class="block24"><h2>Декілька порад</h2></div>
+    <div class="block25"><img src="img/test.png">
+      <h3>Завжди потрібно пам`ятати що постіно потрібно практикуватия </h3>
+    </div>
+    <div class="block26"><img src="img/monitor.png">
+    <h3>Потрібно навчитися самому шукати якусь потрібну інформацію </h3></div>
+    <div class="block27"><img src="img/information.png">
+    <h3>Коли ти чогоь не знаєш то потрібномати блокнот під рукою , щоб занотувати потрібне </h3></div>
+    <div class="block28"><img src="img/knowledge.png">
+    <h3>Не потрібно все заучувати ,тільки те що  дуже треба знати</h3></div>
+
+
+   </div>
+   <div class="foom">
+    <div class="block29"><h2>Клієнти</h2></div>
+    <div class="block30">
+    	<div class="card-container">
+  <div class="card">
+    <div class="side"><img src="img/121212.jpg"></div>
+    <div class="side back"><h4>Нова Енергія</h4></div>
+  </div>
+</div>	
+      
+    </div>
+    <div class="block31">
+    </div>
+    <div class="block32"><img src="img/12.png">
+    </div>
+    <div class="block33">
+    </div>
+    <div class="block34">
+    <img src="img/123.png">
+    </div>
+
+ <div class="block35">
+    </div>
+
+
+   </div>
+   <div class="fooe"> 
+    <div class="block47"><h2>Контакти</h2><br>
+    <h3><u>get in touch</h3><br>
+    <p>Place:If,Ukraine</p><br>
+          <p>E-mail:makutrak.m@gmail.com</p><br>
+          <p>Number:0993029458</p><br> </div>
+      <div class="block44"> </div>
+      <div class="block45">
+          <h3><u></h3><br>
+          <p></p><br>
+          <p><br>
+          <p></p><br>
+
+
+
+
+
+
+
+       </div>
+      <div class="block46"> 
+      <form action="action_page.php">
+  <div class="container">
+    
+    <p>Contact form</p>
+
+    <label for="email"><b>Номер</b></label>
+    <input type="text" placeholder="Номер" name="email" required>
+
+    <label for="psw"><b>Е mail</b></label>
+    <input type="password" placeholder="E mail" name="psw" required>
+
+    <label for="psw-repeat"><b>Comments</b></label>
+    <input type="password" placeholder="Comments" name="psw-repeat" required>
+    <hr>
+
+   
+    <button type="submit" class="registerbtn">Register</button>
+  </div>
+
+ 
+</form> 
+</div></div>
+
+    
+    
+   
+   
+
+ </div>
+</div>
+</body>
+</html>
